@@ -19,30 +19,34 @@
 ##  Примерная (планируемая) архитектура проекта:
 
 ```bash
-project/
+aliccedress_bot/
 │
-├── bot.py                # точка входа
-├── config.py             # токен, настройки
-│
-├── handlers/             # обработчики
+├── handlers/
 │   ├── start.py
-│   ├── color.py
-│   └── style.py
-│
-├── keyboards/            # кнопки
-│   ├── main_menu.py
 │   ├── colors.py
 │   └── styles.py
 │
-├── services/             # бизнес-логика
-│   └── recommendation.py
+├── keyboards/
+│   ├── main_menu.py
+│   ├── colors_kb.py
+│   └── styles_kb.py
 │
-├── database/
-│   ├── models.py
-│   └── db.py
+├── services/
+│   └── recommendations.py
 │
 ├── states/
 │   └── user_states.py
 │
-└── images/               # изображения образов
-
+├── images/
+│   ├── casual/
+│   ├── classic/
+│   ├── sport/
+│   └── color_sets/
+│
+├── config.py
+├── bot.py
+├── requirements.txt
+├── .env
+├── .gitignore
+└── README.md
+```
