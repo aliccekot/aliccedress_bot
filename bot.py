@@ -15,6 +15,12 @@ from keyboards.colors_kb import colors_keyboard
 
 from states.user_states import ColorSelection
 
+from aiogram.types import (
+    Message,
+    FSInputFile,
+    InputMediaPhoto
+)
+
 bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher()
 
@@ -184,6 +190,7 @@ async def second_color(message: Message, state: FSMContext):
     await message.answer(
         "выбери третий цвет"
     )
+
     # Выбор третьего цвета
 @dp.message(ColorSelection.third_color)
 async def third_color(message: Message, state: FSMContext):
@@ -205,6 +212,37 @@ async def third_color(message: Message, state: FSMContext):
         "держи пример образа с этой цветовой комбинацией\n"
         "надеюсь, тебе понравится💅"
     )
+
+    # Название папки
+    folder_name = f"{first}_{second}_{third}"
+
+    folder_path = f"images/color_sets/{folder_name}"
+
+    media = []
+
+    # Если папка существует
+    if os.path.exists(folder_path):
+
+        for image_name in os.listdir(folder_path):
+
+            image_path = f"{folder_path}/{image_name}"
+
+            photo = FSInputFile(image_path)
+
+            media.append(
+                InputMediaPhoto(media=photo)
+            )
+
+    # Если папки нет — отправляем заглушку
+    else:
+
+        photo = FSInputFile("images/color_sets/soon.jpg")
+
+        media.append(
+            InputMediaPhoto(media=photo)
+        )
+
+    await message.answer_media_group(media)
 
     await state.clear()
 
