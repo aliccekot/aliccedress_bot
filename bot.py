@@ -1,7 +1,7 @@
 import asyncio
 
 from aiogram import Bot, Dispatcher, F
-from aiogram.filters import CommandStart
+
 from aiogram.types import Message
 
 from config import BOT_TOKEN
@@ -13,6 +13,8 @@ from keyboards.colors_kb import colors_keyboard
 from aiogram.fsm.context import FSMContext
 from states.user_states import ColorSelection
 
+from handlers.start import router as start_router
+
 from services.recommendations import (
     get_style_images,
     get_color_images
@@ -21,31 +23,17 @@ from services.recommendations import (
 
 bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher()
+dp.include_router(start_router)
 
-
-# ---------- START ----------
-@dp.message(CommandStart())
-async def start(message: Message):
-
-    await message.answer(
-        "привет!\n"
-        "я бот для подбора образов. подберу тебе идеальный образ на основе твоих предпочтений.\n\n"
-        "что ты хочешь выбрать сегодня?💅",
-        reply_markup=main_keyboard
-    )
-
-
-# ---------- STYLE MENU ----------
+# главное меню
 @dp.message(F.text == "подобрать по стилю")
 async def choose_style(message: Message):
 
-    await message.answer(
+    await message.answer(  
         "выбери стиль:",
         reply_markup=styles_keyboard
     )
 
-
-# ---------- STYLE HANDLER ----------
 @dp.message(F.text.in_(["casual", "классика", "sports chic", "вечерний"]))
 async def style_handler(message: Message):
 
@@ -58,9 +46,12 @@ async def style_handler(message: Message):
     await message.answer_media_group(media)
 
 
-# ---------- BACK ----------
+# кнопка "назад"
 @dp.message(F.text == "назад")
-async def back(message: Message):
+async def back(message: Message, state: FSMContext):
+
+    # очищаем состояние FSM
+    await state.clear()
 
     await message.answer(
         "ты в главном меню 💅",
@@ -68,7 +59,7 @@ async def back(message: Message):
     )
 
 
-# ---------- COLOR START ----------
+# кнопка "подбор по цвету"
 @dp.message(F.text == "подобрать по цвету")
 async def choose_color(message: Message, state: FSMContext):
 
@@ -80,7 +71,7 @@ async def choose_color(message: Message, state: FSMContext):
     )
 
 
-# ---------- COLOR STEP 1 ----------
+# выбор цвета 1
 @dp.message(ColorSelection.first_color)
 async def first_color(message: Message, state: FSMContext):
 
@@ -90,7 +81,7 @@ async def first_color(message: Message, state: FSMContext):
     await message.answer("выбери второй цвет")
 
 
-# ---------- COLOR STEP 2 ----------
+# выбор цвета 2
 @dp.message(ColorSelection.second_color)
 async def second_color(message: Message, state: FSMContext):
 
@@ -100,7 +91,7 @@ async def second_color(message: Message, state: FSMContext):
     await message.answer("выбери третий цвет")
 
 
-# ---------- COLOR STEP 3 ----------
+# выбор цвета 3 
 @dp.message(ColorSelection.third_color)
 async def third_color(message: Message, state: FSMContext):
 
@@ -129,7 +120,21 @@ async def third_color(message: Message, state: FSMContext):
     await state.clear()
 
 
-# ---------- RUN ----------
+    # кнопка ""обо мне"
+@dp.message(F.text == "обо мне")
+async def about_me(message: Message, state: FSMContext):
+    
+    await message.answer(
+        "привет, я твой помощник-стилист!\n" 
+        "с моей помощью ты сможешь составлять себе стильные образы на любой случай.\n\n" 
+        "выбери стиль и я покажу тебе варианты образов.\n\n"
+        "либо ты можешь выбрать три цвета и я покажу тебе образы под выбранную тобой цветовую гамму.\n\n" 
+        "буду рад помочь тебе💅"
+    )
+    await state.clear()
+
+
+# запуск
 async def main():
     await dp.start_polling(bot)
 

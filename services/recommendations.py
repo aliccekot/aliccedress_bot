@@ -2,7 +2,7 @@ import os
 from aiogram.types import FSInputFile, InputMediaPhoto
 
 
-# ---------- STYLE IMAGES ----------
+# картинки для выбора по стилю
 def get_style_images(style: str):
 
     folder_map = {
@@ -39,7 +39,7 @@ def get_style_images(style: str):
     return media
 
 
-# ---------- COLOR COMBINATIONS ----------
+# картинки для выбора по цвету
 def get_color_images(first: str, second: str, third: str):
 
     folder_name = f"{first}_{second}_{third}"
