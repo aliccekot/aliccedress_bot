@@ -22,9 +22,7 @@
 aliccedress_bot/
 │
 ├── handlers/
-│   ├── start.py
-│   ├── colors.py
-│   └── styles.py
+│   └── start.py
 │
 ├── keyboards/
 │   ├── main_menu.py

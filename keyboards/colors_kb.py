@@ -10,7 +10,7 @@ colors_keyboard = ReplyKeyboardMarkup(
         ],
         [
             KeyboardButton(text="желтый"),
-            KeyboardButton(text="зелёный"),
+            KeyboardButton(text="зеленый"),
             KeyboardButton(text="коричневый")
         ],
         [
